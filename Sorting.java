@@ -90,6 +90,7 @@ public class Sorting {
     return in;
   }
 
+
   public static int[] mergeSort(int[] in, int p, int r) {
     if (p < r) {
       int q = (p + r) / 2;
@@ -99,7 +100,6 @@ public class Sorting {
     }
     return in;
   }
-
   public static void merge(int[] in, int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
@@ -137,5 +137,13 @@ public class Sorting {
       j++;
       k++;
     }
+  }
+
+  
+  public static void partition(){
+
+  }
+  public static void quickSort(){
+
   }
 }
