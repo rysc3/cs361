@@ -16,7 +16,8 @@ int main()
   srand(time(NULL));
 
   // Size of arrays for the initial tests
-  int size = 200000;
+  // int size = 200000;
+  int size = 2147483647;
 
   printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
   printf("Merge Sort: %.6f seconds\n", time_merge_sort(size));
@@ -72,6 +73,11 @@ double time_insertion_sort(int size)
 
 int *createRandomArray(int size)
 {
+  printf("-------------------------------------------------\n");
+  printf("Creating random array of size: %d\n", size);
+  printf("Array is at memory address: %p\n", &size);
+  printf("Array is taking up %lu GB of memory\n", size * sizeof(int) / 1000000000);
+  printf("\n-------------------------------------------------\n");
   int *randomArray = (int *)malloc(size * sizeof(int));
   if (randomArray == NULL)
   {
