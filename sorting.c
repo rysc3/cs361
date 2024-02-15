@@ -10,18 +10,39 @@ int *createRandomArray(int size);
 double time_insertion_sort(int size);
 double time_merge_sort(int size);
 double time_quick_sort(int size);
+void printArray(int arr[], int n);
 
 int main()
 {
   srand(time(NULL));
 
   // Size of arrays for the initial tests
+  // int size = 10000;
+  // int size= 100000;
   // int size = 200000;
-  int size = 2147483647;
+  int size = 2000000;   // roughly max (in millions) that ubuntu machine is handling for some reason.
+  // int size = 2147483647;   // works on insertion, doesn't on the other ones interestingly
 
-  printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
+  // Single Runs:
+
+  // printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
   printf("Merge Sort: %.6f seconds\n", time_merge_sort(size));
   printf("Quick Sort: %.6f seconds\n", time_quick_sort(size));
+
+  // Multiple Runs for Mean:
+  // double insert_total = 0;
+  // double merge_total = 0;
+  // double quick_total = 0;
+  // for(int i=0; i<20; i++)
+  // {
+  //   insert_total += time_insertion_sort(size);
+  //   merge_total += time_merge_sort(size);
+  //   quick_total += time_quick_sort(size);
+  // }
+
+  // printf("Insertion Sort [MEAN]: %.6f seconds\n", insert_total/20);
+  // printf("Merge Sort [MEAN]: %.6f seconds\n", merge_total/20);
+  // printf("Quick Sort [MEAN]: %.6f seconds\n", quick_total/20);
 
   return 0;
 }
@@ -33,6 +54,8 @@ double time_merge_sort(int size)
   clock_t start_time = clock();
   mergeSort(randomArray, 0, size - 1);
   clock_t end_time = clock();
+
+  // printArray(randomArray, 25);   // check things are being sorted properly
 
   // Free memory allocated for array
   free(randomArray);
@@ -48,6 +71,8 @@ double time_quick_sort(int size)
   clock_t start_time = clock();
   quickSort(randomArray, 0, size - 1);
   clock_t end_time = clock();
+
+  // printArray(randomArray, 25);   // check things are being sorted properly
 
   // Free memory allocated for array
   free(randomArray);
@@ -73,11 +98,7 @@ double time_insertion_sort(int size)
 
 int *createRandomArray(int size)
 {
-  printf("-------------------------------------------------\n");
   printf("Creating random array of size: %d\n", size);
-  printf("Array is at memory address: %p\n", &size);
-  printf("Array is taking up %lu GB of memory\n", size * sizeof(int) / 1000000000);
-  printf("\n-------------------------------------------------\n");
   int *randomArray = (int *)malloc(size * sizeof(int));
   if (randomArray == NULL)
   {
@@ -85,9 +106,20 @@ int *createRandomArray(int size)
     exit(EXIT_FAILURE);
   }
 
+  printf("-------------------------------------------------\n");
+  printf("Created random array of size: %d\n", size);
+  printf("Array is at memory address: %p\n", &size);
+  printf("Array is taking up %.4f GB of memory\n", (double)size * sizeof(int) / 1000000000);
+  printf("\n-------------------------------------------------\n");
+
+  printf("Filling array with random integers\n");
   for (int i = 0; i < size; i++)
   {
     randomArray[i] = rand(); // Fill with random integers
+    if ((i + 1) % (size / 10) == 0)
+    {
+      printf("Filled %.0f%% of array\n", (double)(i + 1) / size * 100);
+    }
   }
 
   return randomArray;
@@ -98,7 +130,7 @@ void insertionSort(int arr[], int n)
   int i, key, j;
   for (i = 1; i < n; i++)
   {
-    printf("Insertion index: %d / %d\n", i, n);
+    // printf(":: %d / %d ::\n", i, n);
     key = arr[i];
     j = i - 1;
     while (j >= 0 && arr[j] > key)
@@ -197,4 +229,18 @@ void quickSort(int arr[], int l, int r)
     quickSort(arr, l, pi - 1);
     quickSort(arr, pi + 1, r);
   }
+}
+
+void printArray(int arr[], int n)
+{
+  printf("[");
+  for (int i = 0; i < n; i++)
+  {
+    printf("%d", arr[i]);
+    if (i < n - 1)
+    {
+      printf(", ");
+    }
+  }
+  printf("]\n");
 }
