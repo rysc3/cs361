@@ -1,82 +1,136 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+// Number of times to run each sorting algorithm
+int SIZE = 10;
+int SIZE_LIMIT = 200000;
+int NUM_ARRAYS = 1;
 
 void insertionSort(int arr[], int n);
 void mergeSort(int arr[], int l, int r);
 void merge(int arr[], int l, int m, int r);
 void printArray(int arr[], int size);
+int *createRandomArray(int *size);
+void swap(int *a, int *b);
+int partition(int arr[], int l, int r);
+void quickSort(int arr[], int l, int r);
+double calculateMeanTime();
 
 int main()
 {
-  int arr1[] = {10, 198, 15, 78, 88, 61, 0, 17, 9};
-  int arr2[] = {68, 28, 10, 84, 74, 45, 41, 2, 31, 85, 43, 26, 45, 61, 4, 74, 22, 54, 74, 15, 47, 58, 58, 18, 61, 100, 89};
-  int arr3[] = {75, 51, 44, 86};
-  int arr4[] = {78, 37, 3, 14, 83, 32, 30, 73, 5, 81, 37, 69, 95};
-  int arr5[] = {27, 37, 49, 5, 45, 63, 51, 68, 5, 18, 84, 87, 40, 55, 58, 100, 90, 2, 61, 1, 89, 73, 60, 5, 92, 54, 32, 73, 36, 86, 10, 44, 82, 99, 67, 85, 14, 95, 32, 76, 47, 87, 48, 47, 75, 69};
+  srand(time(NULL));
 
-  // insertion
-  printf("------ Insertion Sort ------\n");
-  int size1 = sizeof(arr1) / sizeof(arr1[0]);
-  printf("Before:\n");
-  printArray(arr1, size1);
-  insertionSort(arr1, size1);
-  printf("After:\n");
-  printArray(arr1, size1);
-  printf("\n");
+  // Arrays for calculating mean time
+  int arrays[SIZE][SIZE];
+  int size;
+  createRandomArray(&size);
 
-  int size2 = sizeof(arr2) / sizeof(arr2[0]);
-  printf("Before:\n");
-  printArray(arr2, size2);
-  insertionSort(arr2, size2);
-  printf("After:\n");
-  printArray(arr2, size2);
-  printf("\n");
+  for (int i = 0; i < SIZE; i++)
+  {
+    createRandomArray(&size); // Regenerate each time to ensure same size for all arrays
+    for (int j = 0; j < size; j++)
+    {
+      arrays[i][j] = createRandomArray(&size)[j]; // fill with arrays
+    }
+  }
 
-  int size3 = sizeof(arr3) / sizeof(arr3[0]);
-  printf("Before:\n");
-  printArray(arr3, size3);
-  insertionSort(arr3, size3);
-  printf("After:\n");
-  printArray(arr3, size3);
-  printf("\n");
+  // for (int i = 0; i < SIZE; i++)
+  // {
+  //   int size;
+  //   int *randomArray = createRandomArray(&size);
 
-  int size4 = sizeof(arr4) / sizeof(arr4[0]);
-  printf("Before:\n");
-  printArray(arr4, size4);
-  insertionSort(arr4, size4);
-  printf("After:\n");
-  printArray(arr4, size4);
-  printf("\n");
+  //   // Insertion Sort
+  //   printf("------ Insertion Sort ------\n");
+  //   printf("Generated array:\n");
+  //   printArray(randomArray, size);
+  //   printf("After:\n");
+  //   insertionSort(randomArray, size);
+  //   printArray(randomArray, size);
+  //   printf("\n");
 
-  int size5 = sizeof(arr5) / sizeof(arr5[0]);
-  printf("Before:\n");
-  printArray(arr5, size5);
-  insertionSort(arr5, size5);
-  printf("After:\n");
-  printArray(arr5, size5);
-  printf("\n");
-  printf("--------------------------\n");
+  //   free(randomArray);
+  // }
 
-  // merge
-  printf("------ Merge Sort ------\n");
-  mergeSort(arr1, 0, size1 - 1);
-  printArray(arr1, size1);
+  // for (int i=0; i<SIZE; i++)
+  // {
+  //   int size;
+  //   int *randomArray = createRandomArray(&size);
 
-  mergeSort(arr2, 0, size2 - 1);
-  printArray(arr2, size2);
+  //   // Merge Sort
+  //   printf("------ Merge Sort ------\n");
+  //   printf("Generated array:\n");
+  //   printArray(randomArray, size);
+  //   mergeSort(randomArray, 0, size - 1);
+  //   printf("After:\n");
+  //   printArray(randomArray, size);
+  //   printf("--------------------------\n\n");
 
-  mergeSort(arr3, 0, size3 - 1);
-  printArray(arr3, size3);
+  //   free(randomArray);
+  // }
 
-  mergeSort(arr4, 0, size4 - 1);
-  printArray(arr4, size4);
+  // for (int i = 0; i < SIZE; i++)
+  // {
+  //   int size;
+  //   int *randomArray = createRandomArray(&size);
 
-  mergeSort(arr5, 0, size5 - 1);
-  printArray(arr5, size5);
-  printf("--------------------------\n");
+  //   // Insertion Sort
+  //   printf("------ Quick Sort ------\n");
+  //   printf("Generated array:\n");
+  //   printArray(randomArray, size);
+  //   printf("After:\n");
+  //   quickSort(randomArray, 0, size - 1);
+  //   printArray(randomArray, size);
+  //   printf("\n");
+
+  //   free(randomArray);
+  // }
+
+  // Calculate mean time for insertion sort
+  double insertion_mean_time = calculateMeanTime(insertionSort);
+  printf("Insertion Mean time: %.6f seconds\n", insertion_mean_time);
+
+  // Calculate mean time for merge sort
+  double merge_mean_time = calculateMeanTime(mergeSort);
+  printf("Merge Mean time: %.6f seconds\n", merge_mean_time);
+
+  // Calculate mean time for quick sort
+  double quick_mean_time = calculateMeanTime(quickSort);
+  printf("Quick Mean time: %.6f seconds\n", quick_mean_time);
 
   return 0;
 }
+
+// Helpers
+
+int *createRandomArray(int *size)
+{
+  *size = rand() % 20 + 1; // Random size between 1 and 20
+  int *randomArray = (int *)malloc(*size * sizeof(int));
+  if (randomArray == NULL)
+  {
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(EXIT_FAILURE);
+  }
+
+  for (int i = 0; i < *size; i++)
+  {
+    randomArray[i] = rand() % 100; // Fill with completely random integers
+  }
+
+  return randomArray;
+}
+
+void printArray(int arr[], int size)
+{
+  for (int i = 0; i < size; i++)
+    printf("%d ", arr[i]);
+  printf("\n");
+}
+
+/*
+ * * * Sorting Stuff * * *
+ */
 
 void insertionSort(int arr[], int n)
 {
@@ -154,9 +208,65 @@ void mergeSort(int arr[], int l, int r)
   }
 }
 
-void printArray(int arr[], int size)
+int partition(int arr[], int l, int r)
 {
-  for (int i = 0; i < size; i++)
-    printf("%d ", arr[i]);
-  printf("\n");
+  int pivot = arr[r];
+  int i = (l - 1);
+
+  for (int j = l; j <= r - 1; j++)
+  {
+    if (arr[j] < pivot)
+    {
+      i++;
+      int temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+  }
+  int temp = arr[i + 1];
+  arr[i + 1] = arr[r];
+  arr[r] = temp;
+  return (i + 1);
+}
+
+void quickSort(int arr[], int l, int r)
+{
+  if (l < r)
+  {
+    int pi = partition(arr, l, r);
+
+    quickSort(arr, l, pi - 1);
+    quickSort(arr, pi + 1, r);
+  }
+}
+
+double calculateMeanTime(void (*sortingFunction)(int arr[], int size)) {
+    clock_t start, end;
+    double total_time = 0.0;
+
+    for (int i = 0; i < NUM_ARRAYS; i++) {
+        // Generate random array
+        int* arr = (int*)malloc(SIZE_LIMIT * sizeof(int));
+        if (arr == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);
+        }
+        for (int j = 0; j < SIZE_LIMIT; j++) {
+            arr[j] = rand() % 1000;
+        }
+
+        // Measure time taken to sort the array
+        start = clock();
+        sortingFunction(arr, SIZE_LIMIT);
+        end = clock();
+
+        // Accumulate the time taken
+        total_time += (double)(end - start) / CLOCKS_PER_SEC;
+
+        // Free memory allocated for array
+        free(arr);
+    }
+
+    // Calculate and return mean time
+    return total_time / NUM_ARRAYS;
 }
