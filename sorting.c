@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Number of times to run each sorting algorithm
-#define SIZE 10 // num of arrays the initial testing goes through
-#define NUM_ARRAYS 1
-
 void insertionSort(int arr[], int n);
 void mergeSort(int arr[], int l, int r);
 void merge(int arr[], int l, int m, int r);
@@ -20,7 +16,7 @@ int main()
   srand(time(NULL));
 
   // Size of arrays for the initial tests
-  int size = 750000;
+  int size = 200000;
 
   printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
   printf("Merge Sort: %.6f seconds\n", time_merge_sort(size));
@@ -96,6 +92,7 @@ void insertionSort(int arr[], int n)
   int i, key, j;
   for (i = 1; i < n; i++)
   {
+    printf("Insertion index: %d / %d\n", i, n);
     key = arr[i];
     j = i - 1;
     while (j >= 0 && arr[j] > key)
