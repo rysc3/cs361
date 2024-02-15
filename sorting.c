@@ -3,270 +3,93 @@
 #include <time.h>
 
 // Number of times to run each sorting algorithm
-int SIZE = 10;  // num of arrays the initial testing goes through
-int size = 75; // size of the arrays for the initial tests
-// int SIZE_LIMIT = 2147483647;
-int SIZE_LIMIT = 750000;
-int NUM_ARRAYS = 1;
+#define SIZE 10 // num of arrays the initial testing goes through
+#define NUM_ARRAYS 1
 
 void insertionSort(int arr[], int n);
 void mergeSort(int arr[], int l, int r);
 void merge(int arr[], int l, int m, int r);
-void printArray(int arr[], int size);
-int *createRandomArray(int *size);
-void swap(int *a, int *b);
-int partition(int arr[], int l, int r);
 void quickSort(int arr[], int l, int r);
-double calculateMeanTime();
-void doThing();
-
-// timing 
-double time_insertion_sort();
-double time_merge_sort();
-double time_quick_sort();
+int *createRandomArray(int size);
+double time_insertion_sort(int size);
+double time_merge_sort(int size);
+double time_quick_sort(int size);
 
 int main()
 {
   srand(time(NULL));
 
-  // Arrays for calculating mean time
-  int arrays[SIZE][SIZE];
-  int size;
-  createRandomArray(&size);
+  // Size of arrays for the initial tests
+  int size = 750000;
 
-  for (int i = 0; i < SIZE; i++)
-  {
-    createRandomArray(&size); // Regenerate each time to ensure same size for all arrays
-    for (int j = 0; j < size; j++)
-    {
-      arrays[i][j] = createRandomArray(&size)[j]; // fill with arrays
-    }
-  }
-
-  // for (int i = 0; i < SIZE; i++)
-  // {
-  //   int size;
-  //   int *randomArray = createRandomArray(&size);
-
-  //   // Insertion Sort
-  //   printf("------ Insertion Sort ------\n");
-  //   printf("Generated array:\n");
-  //   printArray(randomArray, size);
-  //   printf("After:\n");
-  //   insertionSort(randomArray, size);
-  //   printArray(randomArray, size);
-  //   printf("\n");
-
-  //   free(randomArray);
-  // }
-
-  // for (int i=0; i<SIZE; i++)
-  // {
-  //   int size;
-  //   int *randomArray = createRandomArray(&size);
-
-  //   // Merge Sort
-  //   printf("------ Merge Sort ------\n");
-  //   printf("Generated array:\n");
-  //   printArray(randomArray, size);
-  //   mergeSort(randomArray, 0, size - 1);
-  //   printf("After:\n");
-  //   printArray(randomArray, size);
-  //   printf("--------------------------\n\n");
-
-  //   free(randomArray);
-  // }
-
-  // for (int i = 0; i < SIZE; i++)
-  // {
-  //   int size;
-  //   int *randomArray = createRandomArray(&size);
-
-  //   // Insertion Sort
-  //   printf("------ Quick Sort ------\n");
-  //   printf("Generated array:\n");
-  //   printArray(randomArray, size);
-  //   printf("After:\n");
-  //   quickSort(randomArray, 0, size - 1);
-  //   printArray(randomArray, size);
-  //   printf("\n");
-
-  //   free(randomArray);
-  // }
-
-  printf("Insertion Sort: %.6f seconds\n", time_insertion_sort());
-  printf("Merge Sort: %.6f seconds\n", time_merge_sort());
-  printf("Quick Sort: %.6f seconds\n", time_quick_sort());
+  printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
+  printf("Merge Sort: %.6f seconds\n", time_merge_sort(size));
+  printf("Quick Sort: %.6f seconds\n", time_quick_sort(size));
 
   return 0;
 }
 
-/*
-
-             Timing Stuff 
-
-*/
-
-double time_merge_sort()
+double time_merge_sort(int size)
 {
-  int SIZE_LIMIT;
-  int *randomArray = createRandomArray(&SIZE_LIMIT);
+  int *randomArray = createRandomArray(size);
 
-  // Measure time taken to sort the array
-  system("date +%s%N > start_time.txt"); // Record start time
-
-  // printf("Start\n");
-  // system("date");
-  // printf("\n");
-
+  clock_t start_time = clock();
   mergeSort(randomArray, 0, size - 1);
-
-  // printf("Finish\n");
-  // system("date");
-  // printf("\n");
-
-  system("date +%s%N > end_time.txt"); // Record end time
-
-  // Read start and end time from files
-  FILE *start_file = fopen("start_time.txt", "r");
-  FILE *end_file = fopen("end_time.txt", "r");
-  if (start_file == NULL || end_file == NULL)
-  {
-    fprintf(stderr, "Error opening time files\n");
-    exit(EXIT_FAILURE);
-  }
-  long long start_time, end_time;
-  fscanf(start_file, "%lld", &start_time);
-  fscanf(end_file, "%lld", &end_time);
-  fclose(start_file);
-  fclose(end_file);
-
-  // Calculate time difference in seconds
-  double diff_in_seconds = (end_time - start_time) / 1e9;
+  clock_t end_time = clock();
 
   // Free memory allocated for array
   free(randomArray);
 
-  return diff_in_seconds;
-
+  // Calculate time difference in seconds
+  return ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 }
 
-double time_quick_sort()
+double time_quick_sort(int size)
 {
-  int SIZE_LIMIT;
-  int *randomArray = createRandomArray(&SIZE_LIMIT);
+  int *randomArray = createRandomArray(size);
 
-  // Measure time taken to sort the array
-  system("date +%s%N > start_time.txt"); // Record start time
-
-  // printf("Start\n");
-  // system("date");
-  // printf("\n");
-
+  clock_t start_time = clock();
   quickSort(randomArray, 0, size - 1);
-
-  // printf("Finish\n");
-  // system("date");
-  // printf("\n");
-
-  system("date +%s%N > end_time.txt"); // Record end time
-
-  // Read start and end time from files
-  FILE *start_file = fopen("start_time.txt", "r");
-  FILE *end_file = fopen("end_time.txt", "r");
-  if (start_file == NULL || end_file == NULL)
-  {
-    fprintf(stderr, "Error opening time files\n");
-    exit(EXIT_FAILURE);
-  }
-  long long start_time, end_time;
-  fscanf(start_file, "%lld", &start_time);
-  fscanf(end_file, "%lld", &end_time);
-  fclose(start_file);
-  fclose(end_file);
-
-  // Calculate time difference in seconds
-  double diff_in_seconds = (end_time - start_time) / 1e9;
+  clock_t end_time = clock();
 
   // Free memory allocated for array
   free(randomArray);
 
-  return diff_in_seconds;
+  // Calculate time difference in seconds
+  return ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 }
 
-double time_insertion_sort()
+double time_insertion_sort(int size)
 {
-  int SIZE_LIMIT;
-  int *randomArray = createRandomArray(&SIZE_LIMIT);
+  int *randomArray = createRandomArray(size);
 
-  // Measure time taken to sort the array
-  system("date +%s%N > start_time.txt"); // Record start time
-
-  // printf("Start\n");
-  // system("date");
-  // printf("\n");
-
+  clock_t start_time = clock();
   insertionSort(randomArray, size);
-
-  // printf("Finish\n");
-  // system("date");
-  // printf("\n");
-
-  system("date +%s%N > end_time.txt"); // Record end time
-
-  // Read start and end time from files
-  FILE *start_file = fopen("start_time.txt", "r");
-  FILE *end_file = fopen("end_time.txt", "r");
-  if (start_file == NULL || end_file == NULL)
-  {
-    fprintf(stderr, "Error opening time files\n");
-    exit(EXIT_FAILURE);
-  }
-  long long start_time, end_time;
-  fscanf(start_file, "%lld", &start_time);
-  fscanf(end_file, "%lld", &end_time);
-  fclose(start_file);
-  fclose(end_file);
-
-  // Calculate time difference in seconds
-  double diff_in_seconds = (end_time - start_time) / 1e9;
+  clock_t end_time = clock();
 
   // Free memory allocated for array
   free(randomArray);
 
-  return diff_in_seconds;
+  // Calculate time difference in seconds
+  return ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 }
 
-
-
-// Helpers
-
-int *createRandomArray(int *size)
+int *createRandomArray(int size)
 {
-  *size = rand() % 20 + 1; // Random size between 1 and 20
-  int *randomArray = (int *)malloc(*size * sizeof(int));
+  int *randomArray = (int *)malloc(size * sizeof(int));
   if (randomArray == NULL)
   {
     fprintf(stderr, "Memory allocation failed\n");
     exit(EXIT_FAILURE);
   }
-  for (int i = 0; i < *size; i++)
+
+  for (int i = 0; i < size; i++)
   {
-    randomArray[i] = rand() % 100; // Fill with completely random integers
+    randomArray[i] = rand(); // Fill with random integers
   }
+
   return randomArray;
 }
-
-void printArray(int arr[], int size)
-{
-  for (int i = 0; i < size; i++)
-    printf("%d ", arr[i]);
-  printf("\n");
-}
-
-/*
- * * * Sorting Stuff * * *
- */
 
 void insertionSort(int arr[], int n)
 {
