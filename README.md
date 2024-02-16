@@ -1,4 +1,5 @@
 #cs361 - Data Structures and Algorithms
+
 Ryan Scherbarth, Junior - Computer Science @ The University of New Mexico
 
 Projects and labs from cs357L - Declarative Programming with Professor Haugh (Spring 2024)
