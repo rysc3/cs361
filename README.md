@@ -1,4 +1,4 @@
-#cs361 - Data Structures and Algorithms
+# cs361 - Data Structures and Algorithms
 
 Ryan Scherbarth, Junior - Computer Science @ The University of New Mexico
 
