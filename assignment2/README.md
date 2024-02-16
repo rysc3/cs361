@@ -1,4 +1,2 @@
-# cs361
-
-
-this is an awesome test
+#Assignment 2
+To run this program, simply
