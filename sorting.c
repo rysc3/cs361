@@ -17,15 +17,11 @@ int main()
   srand(time(NULL));
 
   // Size of arrays for the initial tests
-  // int size = 10000;
-  // int size= 100000;
-  // int size = 200000;
-  int size = 2000000;   // roughly max (in millions) that ubuntu machine is handling for some reason.
-  // int size = 2147483647;   // works on insertion, doesn't on the other ones interestingly
+  // int size = 2000000;   // roughly max (in millions) that ubuntu machine is handling for some reason.
+  int size = 2147483647;   // works on insertion, doesn't on the other ones interestingly
 
   // Single Runs:
-
-  // printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
+  printf("Insertion Sort: %.6f seconds\n", time_insertion_sort(size));
   printf("Merge Sort: %.6f seconds\n", time_merge_sort(size));
   printf("Quick Sort: %.6f seconds\n", time_quick_sort(size));
 
@@ -35,9 +31,12 @@ int main()
   // double quick_total = 0;
   // for(int i=0; i<20; i++)
   // {
-  //   insert_total += time_insertion_sort(size);
+  //   // insert_total += time_insertion_sort(size);
+  //   // printf("insertion: %d\n", i);
   //   merge_total += time_merge_sort(size);
+  //   printf("merge: %d\n", i);
   //   quick_total += time_quick_sort(size);
+  //   printf("quick: %d\n", i);
   // }
 
   // printf("Insertion Sort [MEAN]: %.6f seconds\n", insert_total/20);
@@ -98,7 +97,7 @@ double time_insertion_sort(int size)
 
 int *createRandomArray(int size)
 {
-  printf("Creating random array of size: %d\n", size);
+  // printf("Creating random array of size: %d\n", size);
   int *randomArray = (int *)malloc(size * sizeof(int));
   if (randomArray == NULL)
   {
@@ -106,19 +105,19 @@ int *createRandomArray(int size)
     exit(EXIT_FAILURE);
   }
 
-  printf("-------------------------------------------------\n");
-  printf("Created random array of size: %d\n", size);
-  printf("Array is at memory address: %p\n", &size);
-  printf("Array is taking up %.4f GB of memory\n", (double)size * sizeof(int) / 1000000000);
-  printf("\n-------------------------------------------------\n");
+  // printf("-------------------------------------------------\n");
+  // printf("Created random array of size: %d\n", size);
+  // printf("Array is at memory address: %p\n", &size);
+  // printf("Array is taking up %.4f GB of memory\n", (double)size * sizeof(int) / 1000000000);
+  // printf("\n-------------------------------------------------\n");
 
-  printf("Filling array with random integers\n");
+  // printf("Filling array with random integers\n");
   for (int i = 0; i < size; i++)
   {
     randomArray[i] = rand(); // Fill with random integers
     if ((i + 1) % (size / 10) == 0)
     {
-      printf("Filled %.0f%% of array\n", (double)(i + 1) / size * 100);
+      // printf("Filled %.0f%% of array\n", (double)(i + 1) / size * 100);
     }
   }
 
